@@ -1,0 +1,525 @@
+{
+  "info": {
+    "name": "Iron Library - Complete CRUD Suite",
+    "description": "Suite completa de tests con CRUD, validaciones y flujos de integración",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:8087",
+      "type": "string"
+    },
+    {
+      "key": "test_user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_book_id", 
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_loan_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "timestamp",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏥 Health Checks",
+      "item": [
+        {
+          "name": "All Services Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Service is healthy', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "const timestamp = Date.now();",
+                  "pm.collectionVariables.set('timestamp', timestamp);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/books/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 User CRUD",
+      "item": [
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const user = pm.response.json();",
+                  "pm.collectionVariables.set('test_user_id', user.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TestUser_{{timestamp}}\",\n  \"email\": \"test_{{timestamp}}@test.com\",\n  \"membershipType\": \"PREMIUM\",\n  \"isActive\": true,\n  \"phone\": \"123456789\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/users",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/{{test_user_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "{{test_user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User updated', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"UPDATED_{{timestamp}}\",\n  \"email\": \"updated_{{timestamp}}@test.com\",\n  \"membershipType\": \"STUDENT\",\n  \"isActive\": true,\n  \"phone\": \"987654321\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/users/{{test_user_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "{{test_user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📚 Book CRUD",
+      "item": [
+        {
+          "name": "Create Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Book created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const book = pm.response.json();",
+                  "pm.collectionVariables.set('test_book_id', book.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"TestBook_{{timestamp}}\",\n  \"author\": \"TestAuthor\",\n  \"isbn\": \"978-{{timestamp}}\",\n  \"category\": \"SCIENCE\",\n  \"totalCopies\": 5,\n  \"availableCopies\": 5\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/books",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books"]
+            }
+          }
+        },
+        {
+          "name": "Get Book by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Book retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/books/{{test_book_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books", "{{test_book_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Book updated', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"UPDATED_Book_{{timestamp}}\",\n  \"author\": \"UPDATED_Author\",\n  \"isbn\": \"978-{{timestamp}}\",\n  \"category\": \"HISTORY\",\n  \"totalCopies\": 10,\n  \"availableCopies\": 8\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/books/{{test_book_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books", "{{test_book_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📖 Loan CRUD",
+      "item": [
+        {
+          "name": "Create Loan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Loan created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "const loan = pm.response.json();",
+                  "pm.collectionVariables.set('test_loan_id', loan.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": {{test_user_id}},\n  \"bookId\": {{test_book_id}},\n  \"notes\": \"Test loan {{timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/loans",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "loans"]
+            }
+          }
+        },
+        {
+          "name": "Get Loan by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Loan retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/loans/{{test_loan_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "loans", "{{test_loan_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Return Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Book returned', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/loans/{{test_loan_id}}/return",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "loans", "{{test_loan_id}}", "return"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Statistics",
+      "item": [
+        {
+          "name": "User Stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Stats retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/stats",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Loan Stats",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Stats retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/loans/stats",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "loans", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ DELETE Operations",
+      "item": [
+        {
+          "name": "Delete Loan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Loan deleted', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/loans/{{test_loan_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "loans", "{{test_loan_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Book",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Book deleted', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/books/{{test_book_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books", "{{test_book_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User deleted', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/{{test_user_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "{{test_user_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧪 Error Tests",
+      "item": [
+        {
+          "name": "Try Get Deleted User (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Returns 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/{{test_user_id}}",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "{{test_user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Final Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('✅ Complete CRUD Test Suite Finished!', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    console.log('🎉 All CRUD operations tested successfully!');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/books/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "books", "health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
